@@ -1,4 +1,3 @@
-.data
 myarrayA: .word 89,19,91,-5,23,-67,31,46,-71,-14,-10,3,67,17,11,-18,43,-73
 myarrayB: .word 0:11
 myarrayC: .word 0:7
@@ -31,7 +30,7 @@ messthree: .asciiz "Array C: "
 		j whileA
 	minset:   #Sets Min to the new minimum if min is positive, and records the index
 		move $s0, $t6
-		move $t1, $t0
+		move $s1, $t0
 		j whileA
 	
 	exit:
@@ -39,10 +38,10 @@ messthree: .asciiz "Array C: "
 		la $a0, messone
 		syscall
 		
-		div $t1,$t1,4
+		div $s1,$s1,4
 		#sub $t1, $t1, 1
 		li $v0, 1
-		move $a0, $t1
+		move $a0, $s1
 		syscall
 		
 		li $v0, 4
@@ -56,14 +55,20 @@ messthree: .asciiz "Array C: "
 		lw $t6 myarrayA($t0)#load current array variable 
 		addi $t0, $t0, 4
 		bgez $t6, gthan #If current array variable is greater than zero, gthan
-		la $t3 myArrayB
+		addi $t3, $zero,0 
+		addi $t4, $zero,0 
+		la $t3 myarrayC
 		add $t4 $t3, $t2
 		sw $t6 0($t4)
+		addi $t2,$t2,1
 		j whileB
 	gthan:
-		la $t3 myArrayB
+		addi $t3, $zero,0 
+		addi $t4, $zero,0 
+		la $t3 myarrayB
 		add $t4, $t3, $t1
 		sw $s6 0($t4)
+		addi $t1, $t1, 1
 		j whileB
 	exitB:
 		li $v0, 4
