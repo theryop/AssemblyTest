@@ -55,32 +55,15 @@ messthree: .asciiz "Array C: "
 		beq $t0, 72, exitB
 		lw $t6 myarrayA($t0)#load current array variable 
 		addi $t0, $t0, 4
-		bgt $t6, $zero, gthan
-		blt $t6, $zero, lthan
-		
+		bgez $t6, gthan #If current array variable is greater than zero, gthan
+		la $t3 myArrayB
+		add $t4 $t3, $t2
+		sw $t6 0($t4)
 		j whileB
-		
-	lthan:  #sets the next negative arrayA variable into myArrayB
-		lw $t7 myarrayB($t1)
-		move $t7,$t6
-		la $t3, myarrayB
-		move $t4, $t1
-		add $t4, $t4, $t4
-		add $t4, $t4, $t4
-		add $t5, $t3, $t4
-		sw $t7 0($t5)
-		addi $t1, $t1, 4
-		j whileB
-	gthan:	#sets the next positive arrayA varialbe into myArrayC
-		lw $t8 myarrayC($t2)
-		move $t8, $t6
-		la $t3, myarrayC
-		move $t4, $t1
-		add $t4, $t4, $t4
-		add $t4, $t4, $t4
-		add $t5, $t3, $t4
-		sw $t8 0($t5)
-		addi $t1, $t1, 4
+	gthan:
+		la $t3 myArrayB
+		add $t4, $t3, $t1
+		sw $s6 0($t4)
 		j whileB
 	exitB:
 		li $v0, 4
