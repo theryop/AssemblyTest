@@ -25,23 +25,24 @@ messthree: .asciiz "Array C: "
 		
 		slt $s2, $t6, $s0 #compare current array variable to current minimum
 		sgt $s3, $t6, $zero #compare if current array variable is positive
-		beq $s2, $s3, minset #If current array variable is smaller than min but positive, minset
-		
 		addi $t0, $t0, 4
+		beq $s2, $s3, minset #If current array variable is smaller than min but positive, minset
 		
 		j whileA
 	minset:   #Sets Min to the new minimum if min is positive, and records the index
 		move $s0, $t6
 		move $t1, $t0
-		
+		j whileA
 	
 	exit:
 		li $v0, 4
 		la $a0, messone
 		syscall
 		
-		li $v0, 4
-		move $a0, $t6
+		div $t1,$t1,4
+		#sub $t1, $t1, 1
+		li $v0, 1
+		move $a0, $t1
 		syscall
 		
 		li $v0, 4
@@ -53,21 +54,34 @@ messthree: .asciiz "Array C: "
 	whileB:
 		beq $t0, 72, exitB
 		lw $t6 myarrayA($t0)#load current array variable 
+		addi $t0, $t0, 4
 		bgt $t6, $zero, gthan
 		blt $t6, $zero, lthan
-		addi $t0, $t0, 4
+		
 		j whileB
 		
 	lthan:  #sets the next negative arrayA variable into myArrayB
 		lw $t7 myarrayB($t1)
 		move $t7,$t6
-		sw $t7 myarrayB($t1)
+		la $t3, myarrayB
+		move $t4, $t1
+		add $t4, $t4, $t4
+		add $t4, $t4, $t4
+		add $t5, $t3, $t4
+		sw $t7 0($t5)
 		addi $t1, $t1, 4
+		j whileB
 	gthan:	#sets the next positive arrayA varialbe into myArrayC
 		lw $t8 myarrayC($t2)
 		move $t8, $t6
-		sw $t8 myarrayC($t2)
+		la $t3, myarrayC
+		move $t4, $t1
+		add $t4, $t4, $t4
+		add $t4, $t4, $t4
+		add $t5, $t3, $t4
+		sw $t8 0($t5)
 		addi $t1, $t1, 4
+		j whileB
 	exitB:
 		li $v0, 4
 		la $a0, messtwo
@@ -111,10 +125,8 @@ messthree: .asciiz "Array C: "
 		la $a0, newSpace
 		syscall
 		
-		j whileC
+		j whileD
 	exitD:
 		li $v0, 4
 		la $a0, newLine
 		syscall
-		
-		
